@@ -1,0 +1,107 @@
+    def create_method_win(self, ):
+        self.method_win = MethodWin()
+        name_columns = ['types_product_id', 'types_material_id', 'требуемое кол-во продукции', 'кол-во на складе','длина','ширина']
+        columns_int = ['требуемое кол-во продукции', 'кол-во на складе']
+        columns_decimal = ['длина','ширина']
+        columns_int_decimal = ['требуемое кол-во продукции', 'кол-во на складе', 'длина','ширина']
+
+        widgets = self.add_widgets_method_win(self.method_win, name_columns, columns_int, columns_decimal)
+        self.method_win.but_save.clicked.connect(lambda: self.raschet(widgets, columns_int_decimal))
+        self.method_win.show()
+
+    def raschet(self, widgets, columns_int_decimal):
+        values = self.get_values_method_win(widgets, columns_int_decimal)
+        print('values', values)
+
+    def add_widgets_method_win(self, method_win, name_columns, columns_int, columns_decimal):
+        try:
+            widgets = []
+
+            for name in name_columns:
+                if '_id' in name:
+                    name_table = name.replace('_id', '')
+                    widget = self.for_create_combobox_AddUpdate(name_table)
+
+                elif 'date' in name:
+                    widget = QDateEdit()
+                    widget.setDate(QDate.currentDate())
+
+                elif 'photo' in name:
+                    widget = QPushButton()
+                    widget.setText(f"Загрузить фото")
+                    widget.clicked.connect(lambda checked, but=widget: self.for_select_and_copy_image_AddUpdate(but))
+
+                else:
+                    widget = self.create_linedit_for_method_win(name, columns_int, columns_decimal)
+
+
+                method_win.ly_widgets.addWidget(widget)
+                widgets.append(widget)
+
+            return widgets
+
+        except Exception as e:
+            print(f"add_widget_in_ly_AddUpdate/ {e}")
+
+    def get_values_method_win(self, widgets, columns_int_decimal):
+        try:
+            values = list()
+            for widget in widgets:
+                if isinstance(widget, QComboBox):
+                    value = widget.currentText()
+                    value = value.split()[0]
+
+                elif isinstance(widget, QDateEdit):
+                    value = widget.date()
+                    value = value.toString('yyyy-MM-dd')
+
+                elif isinstance(widget, QLineEdit):
+                    value = widget.text()
+                    # name_column = self.name_columns_on_eng[widget.placeholderText()]
+                    name_column = widget.placeholderText()
+
+                    if value == '' and name_column in columns_int_decimal:
+                        value = 0
+                else:
+                    value = widget.text()
+
+                values.append(value)
+
+            return values
+
+        except Exception as e:
+            print(f"for_get_values_columns_AddUpdate/ {e}")
+            # /
+            # /
+            # /
+            # /
+            # /
+            # /
+            # /
+            # /
+
+    def create_linedit_for_method_win(self, name_column, columns_int, columns_decimal):
+        try:
+            widget = QLineEdit()
+            if name_column in columns_int:
+                validator = QIntValidator()
+                widget.setValidator(validator)
+
+            if name_column in columns_decimal:
+                validator = QDoubleValidator()
+                validator.setLocale(QLocale('en_us'))
+                widget.setValidator(validator)
+
+            widget.setPlaceholderText(name_column)
+            # widget.setPlaceholderText(self.name_columns_on_rus[name_column])
+
+            return widget
+
+        except Exception as e:
+            print(f"create_linedit_AddUpdate/ {e}")
+
+
+    """pyinstaller --onefile --noconsole --icon=Комфорт.ico main.py
+    git remote add origin https://github.com/AsrorovMuhammad/stol-8.git
+    git config --global user.email asrorov.m@bk.ru
+    """
