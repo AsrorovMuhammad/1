@@ -105,3 +105,42 @@
     git remote add origin https://github.com/AsrorovMuhammad/stol-8.git
     git config --global user.email asrorov.m@bk.ru
     """
+
+
+        """SELECT 
+    products.id AS products_id,
+    suppliers.id AS supplier_id,
+    suppliers.name AS supplier_name
+FROM 
+    products
+JOIN 
+    delivery_items ON products.id = delivery_items.products_id
+JOIN 
+    deliveries ON delivery_items.deliveries_id = deliveries.id
+JOIN 
+    suppliers ON deliveries.suppliers_id = suppliers.id
+ORDER BY 
+    products.id, suppliers.id
+
+
+
+
+
+
+SELECT 
+    delivery_items.products_id AS product_id,
+    products.name AS product_name,
+    suppliers.name AS supplier_name
+FROM 
+    products
+JOIN 
+    delivery_items ON products.id = delivery_items.products_id
+JOIN 
+    deliveries ON delivery_items.deliveries_id = deliveries.id
+JOIN 
+    suppliers ON deliveries.suppliers_id = suppliers.id
+ORDER BY 
+    products.id
+
+
+"""
